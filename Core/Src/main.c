@@ -50,6 +50,40 @@ TIM_HandleTypeDef htim2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
+
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer [4] = {1 , 2 , 3 , 4};
+
+void display7Seg(int num);
+
+void update7SEG ( int index ) {
+switch ( index ) {
+	case 0:
+		//HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
+		HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
+		display7Seg(led_buffer[0]);
+		break ;
+	case 1:
+// Display the second 7 SEG with led_buffer [1]
+		HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_RESET ) ;
+		display7Seg(led_buffer[0]);
+		break ;
+	case 2:
+ // Display the third 7 SEG with led_buffer [2]
+		HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_RESET ) ;
+		display7Seg(led_buffer[0]);
+		break ;
+	case 3:
+		HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_RESET ) ;
+		display7Seg(led_buffer[0]);
+// Display the forth 7 SEG with led_buffer [3]
+		break ;
+	default :
+		break ;
+	}
+}
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -273,6 +307,47 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	timerRun1();
 	timerRun2();
+	/*if(index_led<=3){
+		update7SEG(index_led++);
+	}
+	else index_led=0;*/
+}
+void display7Seg(int num){
+	switch(num){
+	case 0:
+		GPIOB->ODR = 0x0079;
+		break;
+	case 1:
+		GPIOB->ODR = 0x00A4;
+		break;
+	case 2:
+		GPIOB->ODR = 0x0030;
+		break;
+	case 3:
+		GPIOB->ODR = 0x0040;
+		break;
+	case 4:
+		GPIOB->ODR = 0x0019;
+		break;
+	case 5:
+		GPIOB->ODR = 0x0012;
+		break;
+	case 6:
+		GPIOB->ODR = 0x0002;
+		break;
+	case 7:
+		GPIOB->ODR = 0x0077;
+		break;
+	case 8:
+		GPIOB->ODR = 0x0000;
+		break;
+	case 9:
+		GPIOB->ODR = 0x0010;
+		break;
+	default:
+		break;
+
+	}
 }
 /* USER CODE END 4 */
 
