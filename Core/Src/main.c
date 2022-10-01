@@ -94,53 +94,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
-  HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
-  HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
-  HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
+  //HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
+  //HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
+  //HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
+  //HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
 
-  GPIOB->ODR = 0x0079;
+  //GPIOB->ODR = 0x0079;
   HAL_TIM_Base_Start_IT(&htim2);
-  int stage=1;
-  setTimer1(50);
-  setTimer2(100);
+  //int stage=1;
+  //setTimer1(50);
+  //setTimer2(100);
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(timer1_flag==1){
-	  		  switch(stage){
-	  		  case 0:
-	  			  HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
-	  			  HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
-	  			  GPIOB->ODR = 0x0079;
-	  			  stage++;
-	  		  	  break;
-	  		  case 1:
-	  			  HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_SET ) ;
-	  			  HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_RESET ) ;
-	  			  GPIOB->ODR = 0x00A4;
-	  			  stage++;
-	  			  break;
-	  		  case 2:
-	  			  HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
-	  			  HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_RESET ) ;
-	  			  GPIOB->ODR = 0x0030;
-	  			  stage++;
-	  			  break;
-	  		  default:
-	  			  HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
-	  			  HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_RESET ) ;
-	  			  GPIOB->ODR = 0x0040;
-	  			  stage=0;
-	  			  break;
-	  		  }
 
-	  	  setTimer1(50);
-	  	  }
-	  if(timer2_flag==1){
-		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-		  setTimer2(100);
-	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -268,11 +235,52 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-//int counter=100;
+int counter1=0;
+int counter2=0;
+int stage=0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	timerRun1();
-	timerRun2();
+	if(counter1>=0){
+		counter1--;
+		if(counter1<=0){
+			counter1=50;
+			switch(stage){
+				case 0:
+					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
+					GPIOB->ODR = 0x0079;
+					stage++;
+					break;
+				case 1:
+					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_RESET ) ;
+					GPIOB->ODR = 0x00A4;
+					stage++;
+					break;
+				case 2:
+					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_RESET ) ;
+					GPIOB->ODR = 0x0030;
+					stage++;
+					break;
+				default:
+					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
+					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_RESET ) ;
+					GPIOB->ODR = 0x0040;
+					stage=0;
+					break;
+				  	}
+		}
+	}
+	if(counter2>=0){
+			counter2--;
+			if(counter2<=0){
+				counter2=100;
+				HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+			}
+		}
 }
 /* USER CODE END 4 */
 
