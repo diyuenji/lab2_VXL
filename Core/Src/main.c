@@ -137,7 +137,7 @@ int main(void)
   int hour = 15 , minute = 9 , second = 58;
   setTimer1(1);
   setTimer2(1);
-  int stage=0;
+  //int stage=0;
   while (1)
   {
 	  if(timer2_flag==1){
@@ -153,37 +153,37 @@ int main(void)
 	  if( hour >=24) {
 		  hour = 0;
 	  }
-	  updateClockBuffer (hour,minute) ;
+	  updateClockBuffer(minute, hour);
 	  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	  setTimer2(100);
 	  }
 	  if(timer1_flag==1){
-	  			switch(stage){
+	  			switch(index_led){
 	  				case 0:
 	  					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
-	  					update7SEG(index_led++);
-	  					stage++;
+	  					//update7SEG(index_led++);
+	  					//stage++;
 	  					break;
 	  				case 1:
 	  					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_RESET ) ;
-	  					update7SEG(index_led++);
-	  					stage++;
+	  					//update7SEG(index_led++);
+	  					//stage++;
 	  					break;
 	  				case 2:
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_RESET ) ;
-	  					update7SEG(index_led++);
-	  					stage++;
+	  					//update7SEG(index_led++);
+	  					//stage++;
 	  					break;
 	  				default:
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_RESET ) ;
-	  					update7SEG(index_led);
-	  					stage=0;
+	  					//update7SEG(index_led);
+	  					//stage=0;
 	  					index_led=0;
 	  					break;
 	  				  	}
@@ -317,13 +317,21 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter1=0;
-int counter2=100;
+//int counter1=0;
+//int counter2=100;
 int stage=0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+	switch(state){
+	case 0: update7SEG(stage++); break;
+	case 1: update7SEG(stage++); break;
+	case 2:update7SEG(stage++); break;
+	case 3: update7SEG(stage); stage=0;break;
+	default: break;
+	}
 	timerRun1();
 	timerRun2();
+
 }
 void display7Seg(int num){
 	switch(num){
