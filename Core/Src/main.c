@@ -56,7 +56,7 @@ int index_led = 0;
 int led_buffer [4] = {1 , 0 , 8 , 7};
 
 void display7Seg(int num);
-
+void updateClockBuffer(int minute,int hour);
 void update7SEG ( int index ) {
 switch ( index ) {
 	case 0:
@@ -129,8 +129,23 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_TIM_Base_Start_IT(&htim2);
+  int hour = 15 , minute = 9 , second = 58;
   while (1)
   {
+	  second ++;
+	  if ( second >= 60) {
+		  second = 0;
+		  minute ++;
+	  }
+	  if( minute >= 60) {
+		  minute = 0;
+	  	  hour ++;
+	  }
+	  if( hour >=24) {
+		  hour = 0;
+	  }
+	  updateClockBuffer (hour,minute) ;
+	  HAL_Delay (1000) ;
 
 
     /* USER CODE BEGIN 3 */
@@ -268,7 +283,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(counter1>=0){
 		counter1--;
 		if(counter1<=0){
-			counter1=50;
+			counter1=25;
 			switch(stage){
 				case 0:
 					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
@@ -344,6 +359,13 @@ void display7Seg(int num){
 		break;
 
 	}
+}
+void updateClockBuffer(int hour,int minute)
+{
+	led_buffer[0]=hour/10;
+	led_buffer[1]=hour%10;
+	led_buffer[2]=minute/10;
+	led_buffer[3]=minute%10;
 }
 /* USER CODE END 4 */
 
