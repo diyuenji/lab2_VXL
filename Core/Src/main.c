@@ -158,32 +158,28 @@ int main(void)
 	  setTimer2(100);
 	  }
 	  if(timer1_flag==1){
-	  			switch(stage){
+	  			switch(index_led){
 	  				case 0:
 	  					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_RESET ) ;
 	  					update7SEG(index_led++);
-	  					stage++;
 	  					break;
 	  				case 1:
 	  					HAL_GPIO_WritePin ( EN0_GPIO_Port , EN0_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_RESET ) ;
 	  					update7SEG(index_led++);
-	  					stage++;
 	  					break;
 	  				case 2:
 	  					HAL_GPIO_WritePin ( EN1_GPIO_Port , EN1_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_RESET ) ;
 	  					update7SEG(index_led++);
-	  					stage++;
 	  					break;
 	  				default:
 	  					HAL_GPIO_WritePin ( EN2_GPIO_Port , EN2_Pin ,			GPIO_PIN_SET ) ;
 	  					HAL_GPIO_WritePin ( EN3_GPIO_Port , EN3_Pin ,			GPIO_PIN_RESET ) ;
 	  					update7SEG(index_led);
-	  					stage=0;
 	  					index_led=0;
 	  					break;
 	  				  	}
