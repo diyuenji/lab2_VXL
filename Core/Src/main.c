@@ -53,7 +53,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer [8] = {0x13 , 0x02 , 0x03 , 0x04 , 0x05 , 0x06 , 0x07 , 0x08 };
+uint8_t matrix_buffer [8] = {0x01 , 0x02 , 0x04 , 0x08 , 0x18 , 0x28 , 0x48 , 0xFF };
 void updateLEDMatrix (int index ) {
 switch ( index ) {
 	case 0:
@@ -133,6 +133,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int index=0;
+  setTimer1(2);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -146,8 +148,13 @@ int main(void)
 	  //HAL_GPIO_WritePin (ENM6_GPIO_Port , ENM6_Pin ,GPIO_PIN_SET ) ;
 	  //HAL_GPIO_WritePin (ENM4_GPIO_Port , ENM4_Pin ,GPIO_PIN_SET ) ;
 	  //HAL_GPIO_WritePin (ENM5_GPIO_Port , ENM5_Pin ,GPIO_PIN_SET ) ;
+	  if(timer1_flag==1)
+	  {
+		  updateLEDMatrix(index++);
+		  if(index>=8) index=0;
+		  setTimer1(10);
 
-	  updateLEDMatrix(0);
+	  }
 
     /* USER CODE BEGIN 3 */
   }
