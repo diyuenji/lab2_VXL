@@ -51,9 +51,48 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-
+const int MAX_LED_MATRIX = 8;
+int index_led_matrix = 0;
+uint8_t matrix_buffer [8] = {0x13 , 0x02 , 0x03 , 0x04 , 0x05 , 0x06 , 0x07 , 0x08 };
+void updateLEDMatrix (int index ) {
+switch ( index ) {
+	case 0:
+		GPIOB->ODR=0xFF*256-matrix_buffer[0]*256;
+		GPIOA->ODR=0xFFF8;
+		break ;
+	case 1:
+		GPIOB->ODR=0xFF*256-matrix_buffer[1]*256;
+		GPIOA->ODR=0xFFF7;
+		break ;
+	case 2:
+		GPIOB->ODR=0xFF*256-matrix_buffer[2]*256;
+		GPIOA->ODR=0xFBFF;
+		break ;
+	case 3:
+		GPIOB->ODR=0xFF*256-matrix_buffer[3]*256;
+		GPIOA->ODR=0xF7FF;
+		break ;
+	case 4:
+		GPIOB->ODR=0xFF*256-matrix_buffer[4]*256;
+		GPIOA->ODR=0xEFFF;
+		break ;
+	case 5:
+		GPIOB->ODR=0xFF*256-matrix_buffer[5]*256;
+		GPIOA->ODR=0xDFFF;
+		break ;
+	case 6:
+		GPIOB->ODR=0xFF*256-matrix_buffer[6]*256;
+		GPIOA->ODR=0xBFFF;
+		break ;
+	case 7:
+		GPIOB->ODR=0xFF*256-matrix_buffer[7]*256;
+		GPIOA->ODR=0x7FFF;
+		break ;
+	default:
+		break;
+}
 /* USER CODE END PFP */
-
+}
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
@@ -97,6 +136,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  //HAL_GPIO_WritePin (ROW0_GPIO_Port , ROW0_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM7_GPIO_Port , ENM7_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ROW1_GPIO_Port , ROW1_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM1_GPIO_Port , ENM1_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ROW2_GPIO_Port , ROW2_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM2_GPIO_Port , ENM2_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM3_GPIO_Port , ENM3_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM6_GPIO_Port , ENM6_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM4_GPIO_Port , ENM4_Pin ,GPIO_PIN_SET ) ;
+	  //HAL_GPIO_WritePin (ENM5_GPIO_Port , ENM5_Pin ,GPIO_PIN_SET ) ;
+
+	  updateLEDMatrix(0);
 
     /* USER CODE BEGIN 3 */
   }
@@ -242,13 +293,6 @@ static void MX_GPIO_Init(void)
 int stage=0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	switch(state){
-	case 0: update7SEG(stage++); break;
-	case 1: update7SEG(stage++); break;
-	case 2:update7SEG(stage++); break;
-	case 3: update7SEG(stage); stage=0;break;
-	default: break;
-	}
 	timerRun1();
 	timerRun2();
 
@@ -292,10 +336,6 @@ void display7Seg(int num){
 }
 void updateClockBuffer(int hour,int minute)
 {
-	led_buffer[0]=hour/10;
-	led_buffer[1]=hour%10;
-	led_buffer[2]=minute/10;
-	led_buffer[3]=minute%10;
 }
 /* USER CODE END 4 */
 
