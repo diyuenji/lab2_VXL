@@ -53,7 +53,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer [8] = {0x01 , 0x02 , 0x04 , 0x08 , 0x18 , 0x28 , 0x48 , 0xFF };
+uint8_t matrix_buffer [8] = {0x00 , 0x3F , 0x7F , 0xA0 , 0xA0 , 0x7F , 0x3F , 0x00 };
 void updateLEDMatrix (int index ) {
 switch ( index ) {
 	case 0:
@@ -91,8 +91,9 @@ switch ( index ) {
 	default:
 		break;
 }
-/* USER CODE END PFP */
 }
+/* USER CODE END PFP */
+
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
@@ -130,34 +131,25 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int index=0;
-  setTimer1(2);
-  while (1)
-  {
-    /* USER CODE END WHILE */
-	  //HAL_GPIO_WritePin (ROW0_GPIO_Port , ROW0_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM7_GPIO_Port , ENM7_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ROW1_GPIO_Port , ROW1_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM1_GPIO_Port , ENM1_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ROW2_GPIO_Port , ROW2_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM2_GPIO_Port , ENM2_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM3_GPIO_Port , ENM3_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM6_GPIO_Port , ENM6_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM4_GPIO_Port , ENM4_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM5_GPIO_Port , ENM5_Pin ,GPIO_PIN_SET ) ;
-	  if(timer1_flag==1)
-	  {
-		  updateLEDMatrix(index++);
-		  if(index>=8) index=0;
-		  setTimer1(10);
+  HAL_TIM_Base_Start_IT(&htim2);
+    int index=0;
+      setTimer1(1);
+      while (1)
+      {
+        /* USER CODE END WHILE */
+    	  if(timer1_flag==1)
+    	  {
+    		  updateLEDMatrix(index++);
+    		  if(index>=8) index=0;
+    		  setTimer1(15);
 
-	  }
+    	  }
 
-    /* USER CODE BEGIN 3 */
-  }
+        /* USER CODE BEGIN 3 */
+      }
   /* USER CODE END 3 */
 }
 
@@ -215,9 +207,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 7999;
+  htim2.Init.Prescaler = 399;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 10;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)

@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001633f  00000000  00000000  0002ac70  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00009432  00000000  00000000  00040faf  2**0
+ 17 .debug_line   00009430  00000000  00000000  00040faf  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00082064  00000000  00000000  0004a3e1  2**0
+ 18 .debug_str    00082064  00000000  00000000  0004a3df  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000cc445  2**0
+ 19 .comment      00000053  00000000  00000000  000cc443  2**0
                   CONTENTS, READONLY
  20 .debug_frame  000026e8  00000000  00000000  000cc498  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -81,7 +81,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer [8] = {0x01 , 0x02 , 0x04 , 0x08 , 0x18 , 0x28 , 0x48 , 0xFF };
+uint8_t matrix_buffer [8] = {0x00 , 0x3F , 0x7F , 0xA0 , 0xA0 , 0x7F , 0x3F , 0x00 };
 void updateLEDMatrix (int index ) {
  800014c:	b480      	push	{r7}
  800014e:	b083      	sub	sp, #12
@@ -217,7 +217,6 @@ switch ( index ) {
 		break;
  8000240:	bf00      	nop
 }
-/* USER CODE END PFP */
 }
  8000242:	bf00      	nop
  8000244:	370c      	adds	r7, #12
@@ -261,47 +260,45 @@ int main(void)
  8000266:	f000 f8a9 	bl	80003bc <MX_GPIO_Init>
   MX_TIM2_Init();
  800026a:	f000 f85b 	bl	8000324 <MX_TIM2_Init>
-  /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   HAL_TIM_Base_Start_IT(&htim2);
  800026e:	480d      	ldr	r0, [pc, #52]	; (80002a4 <main+0x4c>)
  8000270:	f001 f942 	bl	80014f8 <HAL_TIM_Base_Start_IT>
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  int index=0;
+    int index=0;
  8000274:	2300      	movs	r3, #0
  8000276:	607b      	str	r3, [r7, #4]
-  setTimer1(2);
- 8000278:	2002      	movs	r0, #2
+      setTimer1(1);
+ 8000278:	2001      	movs	r0, #1
  800027a:	f000 f907 	bl	800048c <setTimer1>
-	  //HAL_GPIO_WritePin (ENM2_GPIO_Port , ENM2_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM3_GPIO_Port , ENM3_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM6_GPIO_Port , ENM6_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM4_GPIO_Port , ENM4_Pin ,GPIO_PIN_SET ) ;
-	  //HAL_GPIO_WritePin (ENM5_GPIO_Port , ENM5_Pin ,GPIO_PIN_SET ) ;
-	  if(timer1_flag==1)
+      while (1)
+      {
+        /* USER CODE END WHILE */
+    	  if(timer1_flag==1)
  800027e:	4b0a      	ldr	r3, [pc, #40]	; (80002a8 <main+0x50>)
  8000280:	681b      	ldr	r3, [r3, #0]
  8000282:	2b01      	cmp	r3, #1
  8000284:	d1fb      	bne.n	800027e <main+0x26>
-	  {
-		  updateLEDMatrix(index++);
+    	  {
+    		  updateLEDMatrix(index++);
  8000286:	687b      	ldr	r3, [r7, #4]
  8000288:	1c5a      	adds	r2, r3, #1
  800028a:	607a      	str	r2, [r7, #4]
  800028c:	4618      	mov	r0, r3
  800028e:	f7ff ff5d 	bl	800014c <updateLEDMatrix>
-		  if(index>=8) index=0;
+    		  if(index>=8) index=0;
  8000292:	687b      	ldr	r3, [r7, #4]
  8000294:	2b07      	cmp	r3, #7
  8000296:	dd01      	ble.n	800029c <main+0x44>
  8000298:	2300      	movs	r3, #0
  800029a:	607b      	str	r3, [r7, #4]
-		  setTimer1(10);
- 800029c:	200a      	movs	r0, #10
+    		  setTimer1(15);
+ 800029c:	200f      	movs	r0, #15
  800029e:	f000 f8f5 	bl	800048c <setTimer1>
-	  if(timer1_flag==1)
+    	  if(timer1_flag==1)
  80002a2:	e7ec      	b.n	800027e <main+0x26>
  80002a4:	20000040 	.word	0x20000040
  80002a8:	20000034 	.word	0x20000034
@@ -430,17 +427,17 @@ static void MX_TIM2_Init(void)
  8000340:	4b1d      	ldr	r3, [pc, #116]	; (80003b8 <MX_TIM2_Init+0x94>)
  8000342:	f04f 4280 	mov.w	r2, #1073741824	; 0x40000000
  8000346:	601a      	str	r2, [r3, #0]
-  htim2.Init.Prescaler = 7999;
+  htim2.Init.Prescaler = 399;
  8000348:	4b1b      	ldr	r3, [pc, #108]	; (80003b8 <MX_TIM2_Init+0x94>)
- 800034a:	f641 723f 	movw	r2, #7999	; 0x1f3f
+ 800034a:	f240 128f 	movw	r2, #399	; 0x18f
  800034e:	605a      	str	r2, [r3, #4]
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
  8000350:	4b19      	ldr	r3, [pc, #100]	; (80003b8 <MX_TIM2_Init+0x94>)
  8000352:	2200      	movs	r2, #0
  8000354:	609a      	str	r2, [r3, #8]
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 10;
  8000356:	4b18      	ldr	r3, [pc, #96]	; (80003b8 <MX_TIM2_Init+0x94>)
- 8000358:	2209      	movs	r2, #9
+ 8000358:	220a      	movs	r2, #10
  800035a:	60da      	str	r2, [r3, #12]
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
  800035c:	4b16      	ldr	r3, [pc, #88]	; (80003b8 <MX_TIM2_Init+0x94>)
