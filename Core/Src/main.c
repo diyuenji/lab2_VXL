@@ -53,7 +53,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer [8] = {0x00 , 0x3F , 0x7F , 0xA0 , 0xA0 , 0x7F , 0x3F , 0x00 };
+uint8_t matrix_buffer [8] = {0x30 , 0x0C , 0x03 , 0x0C , 0x30 , 0xC0 , 0x30 , 0x0C};
 void updateLEDMatrix (int index ) {
 switch ( index ) {
 	case 0:
@@ -135,16 +135,16 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_TIM_Base_Start_IT(&htim2);
-    int index=0;
+    int index=7;
       setTimer1(1);
       while (1)
       {
         /* USER CODE END WHILE */
     	  if(timer1_flag==1)
     	  {
-    		  updateLEDMatrix(index++);
-    		  if(index>=8) index=0;
-    		  setTimer1(15);
+    		  updateLEDMatrix(index--);
+    		  if(index<0) index=7;
+    		  setTimer1(150);
 
     	  }
 

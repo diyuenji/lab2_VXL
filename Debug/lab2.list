@@ -81,7 +81,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer [8] = {0x00 , 0x3F , 0x7F , 0xA0 , 0xA0 , 0x7F , 0x3F , 0x00 };
+uint8_t matrix_buffer [8] = {0x30 , 0x0C , 0x03 , 0x0C , 0x30 , 0xC0 , 0x30 , 0x0C};
 void updateLEDMatrix (int index ) {
  800014c:	b480      	push	{r7}
  800014e:	b083      	sub	sp, #12
@@ -268,8 +268,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
  800026e:	480d      	ldr	r0, [pc, #52]	; (80002a4 <main+0x4c>)
  8000270:	f001 f942 	bl	80014f8 <HAL_TIM_Base_Start_IT>
-    int index=0;
- 8000274:	2300      	movs	r3, #0
+    int index=7;
+ 8000274:	2307      	movs	r3, #7
  8000276:	607b      	str	r3, [r7, #4]
       setTimer1(1);
  8000278:	2001      	movs	r0, #1
@@ -283,20 +283,20 @@ int main(void)
  8000282:	2b01      	cmp	r3, #1
  8000284:	d1fb      	bne.n	800027e <main+0x26>
     	  {
-    		  updateLEDMatrix(index++);
+    		  updateLEDMatrix(index--);
  8000286:	687b      	ldr	r3, [r7, #4]
- 8000288:	1c5a      	adds	r2, r3, #1
+ 8000288:	1e5a      	subs	r2, r3, #1
  800028a:	607a      	str	r2, [r7, #4]
  800028c:	4618      	mov	r0, r3
  800028e:	f7ff ff5d 	bl	800014c <updateLEDMatrix>
-    		  if(index>=8) index=0;
+    		  if(index<0) index=7;
  8000292:	687b      	ldr	r3, [r7, #4]
- 8000294:	2b07      	cmp	r3, #7
- 8000296:	dd01      	ble.n	800029c <main+0x44>
- 8000298:	2300      	movs	r3, #0
+ 8000294:	2b00      	cmp	r3, #0
+ 8000296:	da01      	bge.n	800029c <main+0x44>
+ 8000298:	2307      	movs	r3, #7
  800029a:	607b      	str	r3, [r7, #4]
-    		  setTimer1(15);
- 800029c:	200f      	movs	r0, #15
+    		  setTimer1(150);
+ 800029c:	2096      	movs	r0, #150	; 0x96
  800029e:	f000 f8f5 	bl	800048c <setTimer1>
     	  if(timer1_flag==1)
  80002a2:	e7ec      	b.n	800027e <main+0x26>
